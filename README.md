@@ -1,1 +1,1 @@
-**Ironhook's code repository for the 2017-2018 Game Season.**
+**Ironhook's code repository for the 2017-2018 Game Season**
