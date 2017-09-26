@@ -103,16 +103,8 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code onthe next line, between the double quotes.
          */
+        parameters.vuforiaLicenseKey = "AShjAuD/////AAAAGQ1/wLnLiEA0ioTqRWYn+SxShC+UUo94K2KMWDmywIJ7j7mBSh8V5XGWJN/9oBiD/pAzdAj3NSoJ2IJ1Nu0ZKSf7NKxeFlWFYrexIs25lYjryT/ag7+RQYT158sa1H0Fe9+Y//H+qZvO63odc6QhBadD3yEmkYfqbANDud8IcesvB/FdCnKdEpaAdyzDJBBmPGW3MFTn18Zb3Vm+44MVSTnk9a32HE2D4dViN477aIGh/jacPTW+xdlpSQSfwXb1+i8rFPF7chm1XY8LGUvtiDaSsS9LuuiOrJ7OsINLmm5xAGxaqHvf1LbF+aUD1iKrLEWG4EMlyIpPC8mZCsw6cp7LwQJLgWsvsIqRcLps2gEu";
 
-        // Done as of 9/11 by Jonathon, but this key is my personal one.
-        // TODO: Get a vuforia developer code for the team
-
-        parameters.vuforiaLicenseKey = "AShjAuD/////AAAAGQ1/wLnLiEA0ioTqRWYn+SxShC+UUo94K2KMWDmyw" +
-                "IJ7j7mBSh8V5XGWJN/9oBiD/pAzdAj3NSoJ2IJ1Nu0ZKSf7NKxeFlWFYrexIs25lYjryT/ag7+RQYT15" +
-                "8sa1H0Fe9+Y//H+qZvO63odc6QhBadD3yEmkYfqbANDud8IcesvB/FdCnKdEpaAdyzDJBBmPGW3MFTn1" +
-                "8Zb3Vm+44MVSTnk9a32HE2D4dViN477aIGh/jacPTW+xdlpSQSfwXb1+i8rFPF7chm1XY8LGUvtiDaSs" +
-                "S9LuuiOrJ7OsINLmm5xAGxaqHvf1LbF+aUD1iKrLEWG4EMlyIpPC8mZCsw6cp7LwQJLgWsvsIqRcLps2gEu";
-        
         /*
          * We also indicate which camera on the RC that we wish to use.
          * Here we chose the back (HiRes) camera (for greater range), but
@@ -145,9 +137,6 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
              * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
-
-            // TODO: Find out how to get the enum values from this
-
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
