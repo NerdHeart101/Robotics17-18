@@ -32,9 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -57,7 +54,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 public class CombotTank extends OpMode{
 
     /* Declare OpMode members. */
-    HardwareCompbot robot       = new HardwareCompbot();
+    HardwareBabybot robot       = new HardwareBabybot();
 
     boolean fine;
 
@@ -70,6 +67,9 @@ public class CombotTank extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        robot.leftClaw.setPosition(0);
+        robot.rightClaw.setPosition(0);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //

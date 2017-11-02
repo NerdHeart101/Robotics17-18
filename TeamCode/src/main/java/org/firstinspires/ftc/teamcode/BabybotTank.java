@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -53,9 +52,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class BabybotTank extends OpMode{
 
     /* Declare OpMode members. */
-    HardwareCompbot robot       = new HardwareCompbot();
+    HardwareBabybot robot       = new HardwareBabybot();
 
-    boolean fine;
+    boolean fine = false;
+    boolean glyphGrab = false;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -72,48 +72,59 @@ public class BabybotTank extends OpMode{
 
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
-    @Override
-    public void start() {
-    }
-
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
     @Override
     public void loop() {
         double left;
         double right;
+        double glyph;
 
-        left = gamepad1.left_stick_y;
-        right = gamepad1.right_stick_y;
+        left = -gamepad1.left_stick_y;
+        right = -gamepad1.right_stick_y;
+        glyph = gamepad1.right_trigger - gamepad1.left_trigger;
 
+        /*
         // Allow for fine control by pressing RB
         if (gamepad1.right_bumper) {
            fine = !fine;
         }
 
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
-
         if(fine) {
-            left *= .25;
-            right *= .25;
+            left *= .15;
+            right *= .15;
         }
+        */
+
+        if(gamepad1.left_bumper) {
+            glyphGrab = false;
+        } else if(gamepad1.right_bumper) {
+            glyphGrab = true;
+        }
+
+        if (glyphGrab) {
+            robot.leftClaw.setPosition(1);
+            robot.rightClaw.setPosition(0);
+        } else {
+            robot.rightClaw.setPosition(.9);
+            robot.leftClaw.setPosition(.1);
+        }
+
+        if (gamepad1.a) {
+            robot.jewelArm.setPosition(.2);
+        } else if (gamepad1.b) {
+            robot.jewelArm.setPosition(1);
+        }
+
+        telemetry.addData("left wheel",  "%.2f", left);
+        telemetry.addData("right wheel", "%.2f", right);
+        telemetry.addData("glyph lift", "%.2f", glyph);
 
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
+        robot.glyphLift.setPower(glyph);
 
-        telemetry.addData("fine control: %b", fine);
+        //telemetry.addData("fine control:", fine);
+        telemetry.addData("left claw", robot.leftClaw.getPosition());
+        telemetry.addData("right claw", robot.rightClaw.getPosition());
     }
 
     /*
