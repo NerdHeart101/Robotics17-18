@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "Babybot: Auto", group = "babybot")
 public class AutoTest extends LinearOpMode {
 
-    HardwareCompbot babybot = new HardwareCompbot();
+    HardwareBabybot babybot = new HardwareBabybot();
     private ElapsedTime elapsedTime = new ElapsedTime();
 
     private static final double SPEED = 0.5;
