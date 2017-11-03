@@ -49,81 +49,81 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name="Compbot: TANK", group="Compbot")
-@Disabled
 
 public class CombotTank extends OpMode{
 
     /* Declare OpMode members. */
-    HardwareBabybot robot       = new HardwareBabybot();
+    HardwareCompbot robot       = new HardwareCompbot();
+    boolean fine = false;
 
-    boolean fine;
-
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
     public void init() {
-        /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
-         */
+
         robot.init(hardwareMap);
 
         robot.leftClaw.setPosition(0);
-        robot.rightClaw.setPosition(0);
+        robot.rightClaw.setPosition(1);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Say", "Hello Drivers");    //
 
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-    }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
     @Override
     public void start() {
+        robot.leftClaw.setPosition(.1);
+        robot.rightClaw.setPosition(.9);
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
     @Override
     public void loop() {
         double left;
         double right;
+        double glyph;
 
-        left = gamepad1.left_stick_y;
-        right = gamepad1.right_stick_y;
+        // DRIVER CONTROLS
+        left = -gamepad1.left_stick_y;
+        right = -gamepad1.right_stick_y;
 
-        // Allow for fine control by pressing RB
+        // Allow for fine control by pressing RB, cancel using LB
         if (gamepad1.right_bumper) {
-           fine = !fine;
+            fine = true;
+        } else if (gamepad1.left_bumper) {
+            fine = false;
         }
 
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
-
         if(fine) {
-            left *= .25;
-            right *= .25;
+            left *= .15;
+            right *= .15;
         }
 
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
 
-        telemetry.addData("fine control: %b", fine);
-    }
+        // OPERATOR CONTROLS
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
+        glyph = gamepad2.right_trigger - gamepad2.left_trigger;
+        robot.glyphLift.setPower(glyph);
+
+        if (gamepad2.right_bumper) {
+            robot.leftClaw.setPosition(1);
+            robot.rightClaw.setPosition(0);
+        } else if (gamepad2.left_bumper) {
+            robot.leftClaw.setPosition(.1);
+            robot.rightClaw.setPosition(.9);
+        }
+
+        if (gamepad2.a) {
+            robot.jewelArm.setPosition(.3);
+        } else if (gamepad2.b) {
+            robot.jewelArm.setPosition(1);
+        }
+
+        // TELEMETRY
+        telemetry.addData("left wheel",  "%.2f", left);
+        telemetry.addData("right wheel", "%.2f", right);
+        telemetry.addData("glyph lift", "%.2f", glyph);
+
+        telemetry.addData("fine control:", fine);
     }
 }
