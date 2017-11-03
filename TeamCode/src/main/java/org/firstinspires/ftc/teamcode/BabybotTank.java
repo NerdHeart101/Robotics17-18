@@ -47,90 +47,55 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Baby bot: TANK", group="Baby bot")
+@TeleOp(name="Babybot: TANK", group="Babybot")
 
 public class BabybotTank extends OpMode{
 
-    /* Declare OpMode members. */
     HardwareBabybot robot       = new HardwareBabybot();
 
-    boolean fine = false;
     boolean glyphGrab = false;
 
-    /*
-     * Code to run ONCE when the driver hits INIT
-     */
     @Override
     public void init() {
-        /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
-         */
+
         robot.init(hardwareMap);
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        robot.leftClaw.setPosition(0);
+        robot.rightClaw.setPosition(1);
 
+        telemetry.addData("Say", "Hello Driver");
+    }
+
+    @Override
+    public void start() {
+
+        robot.leftClaw.setPosition(.1);
+        robot.rightClaw.setPosition(.9);
     }
 
     @Override
     public void loop() {
         double left;
         double right;
-        double glyph;
 
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
-        glyph = gamepad1.right_trigger - gamepad1.left_trigger;
 
-        /*
-        // Allow for fine control by pressing RB
         if (gamepad1.right_bumper) {
-           fine = !fine;
-        }
-
-        if(fine) {
-            left *= .15;
-            right *= .15;
-        }
-        */
-
-        if(gamepad1.left_bumper) {
-            glyphGrab = false;
-        } else if(gamepad1.right_bumper) {
-            glyphGrab = true;
-        }
-
-        if (glyphGrab) {
             robot.leftClaw.setPosition(1);
             robot.rightClaw.setPosition(0);
-        } else {
-            robot.rightClaw.setPosition(.9);
+        } else if (gamepad1.left_bumper) {
             robot.leftClaw.setPosition(.1);
-        }
-
-        if (gamepad1.a) {
-            robot.jewelArm.setPosition(.2);
-        } else if (gamepad1.b) {
-            robot.jewelArm.setPosition(1);
+            robot.rightClaw.setPosition(.9);
         }
 
         telemetry.addData("left wheel",  "%.2f", left);
         telemetry.addData("right wheel", "%.2f", right);
-        telemetry.addData("glyph lift", "%.2f", glyph);
 
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
-        robot.glyphLift.setPower(glyph);
 
-        //telemetry.addData("fine control:", fine);
         telemetry.addData("left claw", robot.leftClaw.getPosition());
         telemetry.addData("right claw", robot.rightClaw.getPosition());
-    }
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {
     }
 }
