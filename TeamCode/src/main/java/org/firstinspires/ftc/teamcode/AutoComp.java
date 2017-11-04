@@ -19,18 +19,17 @@ public class AutoComp extends LinearOpMode {
     HardwareCompbot robot   = new HardwareCompbot();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
 
-
-    static final double     FORWARD_SPEED = 0.5;
     static final double     TURN_SPEED    = 0.5;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
 
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+        robot.colorSensor.enableLed(true);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
@@ -39,24 +38,46 @@ public class AutoComp extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
-
-        while (opModeIsActive() && runtime.seconds() < 3.0) {
-            robot.jewelArm.setPosition(.3);
-            if(robot.colorSensor.red() > 1) {
-                robot.leftDrive.setPower(-FORWARD_SPEED);
-                robot.rightDrive.setPower(-FORWARD_SPEED);
+        robot.jewelArm.setPosition(.3);
+        runtime.reset();
+        sleep(1000);
+        while (runtime.seconds() < 1.0) {
+            telemetry.addData("2.5f s", runtime.seconds());
+            if(robot.colorSensor.red() >= 1) {
+                robot.leftDrive.setPower(-.5);
+                robot.rightDrive.setPower(-.5);
+                sleep(1000);
+                robot.jewelArm.setPosition(1);
+                sleep(1000);
                 runtime.reset();
+                break;
 
             } else {
-                robot.leftDrive.setPower(FORWARD_SPEED);
-                robot.rightDrive.setPower(FORWARD_SPEED);
+                robot.leftDrive.setPower(.5);
+                robot.rightDrive.setPower(5);
+                sleep(1000);
+                robot.jewelArm.setPosition(1);
+                sleep(1000);
                 runtime.reset();
-            }
+                while (runtime.seconds() < 4.0) {
+                    robot.leftDrive.setPower(.5);
+                    robot.rightDrive.setPower(-.5);
+                    sleep(100);
+                    robot.leftDrive.setPower(.7);
+                    robot.rightDrive.setPower(.7);
+                    runtime.reset();
 
+                }
+
+
+            }
         }
 
+
         telemetry.addData("Path", "Complete");
+        telemetry.addData("%d", robot.colorSensor.red());
+        telemetry.addData("%d", robot.colorSensor.blue());
+
         telemetry.update();
         sleep(1000);
     }
