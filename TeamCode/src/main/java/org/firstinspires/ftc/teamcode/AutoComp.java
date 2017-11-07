@@ -39,13 +39,14 @@ public class AutoComp extends LinearOpMode {
         waitForStart();
 
         robot.jewelArm.setPosition(.3);
-        runtime.reset();
+
         sleep(1000);
-        while (runtime.seconds() < 1.0) {
+        runtime.reset();
+        while (runtime.seconds() < 1.5) {
             telemetry.addData("2.5f s", runtime.seconds());
             if(robot.colorSensor.red() >= 1) {
-                robot.leftDrive.setPower(-.5);
-                robot.rightDrive.setPower(-.5);
+                robot.leftDrive.setPower(.2);
+                robot.rightDrive.setPower(.2);
                 sleep(1000);
                 robot.jewelArm.setPosition(1);
                 sleep(1000);
@@ -53,8 +54,8 @@ public class AutoComp extends LinearOpMode {
                 break;
 
             } else {
-                robot.leftDrive.setPower(.5);
-                robot.rightDrive.setPower(5);
+                robot.leftDrive.setPower(-.2);
+                robot.rightDrive.setPower(-.2);
                 sleep(1000);
                 robot.jewelArm.setPosition(1);
                 sleep(1000);

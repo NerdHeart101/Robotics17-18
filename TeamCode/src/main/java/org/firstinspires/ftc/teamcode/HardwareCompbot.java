@@ -45,7 +45,7 @@ public class HardwareCompbot {
         rightClaw.setPosition(1);
         jewelArm.setPosition(1);
 
-        colorSensor = hwMap.get(ColorSensor.class, "color_sensor");
+        colorSensor = hwMap.get(ColorSensor.class, "sensor_color");
 
     }
 
