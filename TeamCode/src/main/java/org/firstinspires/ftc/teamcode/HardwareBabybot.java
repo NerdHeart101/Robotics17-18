@@ -11,30 +11,36 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class HardwareBabybot {
 
-    public DcMotor leftDrive = null;
-    public DcMotor rightDrive = null;
-    public Servo leftClaw = null;
-    public Servo rightClaw = null;
+    public DcMotor frontLeft = null;
+    public DcMotor frontRight = null;
+    public DcMotor backLeft = null;
+    public DcMotor backRight = null;
 
     HardwareMap hwMap = null;
 
     public void init(HardwareMap ahwMap) {
 
         hwMap = ahwMap;
-        leftDrive = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
 
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontRight      = hwMap.dcMotor.get("front_right_drive");
+        backRight       = hwMap.dcMotor.get("back_right_drive");
+        frontLeft       = hwMap.dcMotor.get("front_left_drive");
+        backLeft        = hwMap.dcMotor.get("back_left_drive");
 
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        leftClaw = hwMap.get(Servo.class, "left_claw");
-        rightClaw = hwMap.get(Servo.class, "right_claw");
+        frontRight.setPower(0);
+        backRight.setPower(0);
+        frontLeft.setPower(0);
+        backLeft.setPower(0);
 
-        leftClaw.setPosition(0);
-        rightClaw.setPosition(1);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 

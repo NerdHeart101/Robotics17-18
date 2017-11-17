@@ -32,70 +32,40 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-/**
- * This file provides basic Telop driving for a Pushbot robot.
- * The code is structured as an Iterative OpMode
- *
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
- *
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
+@TeleOp(name="Babybot: MECANUM", group="Babybot")
 
-@TeleOp(name="Babybot: TANK", group="Babybot")
-
-public class BabybotTank extends OpMode{
+public class BabybotMecanum extends OpMode{
 
     HardwareBabybot robot       = new HardwareBabybot();
 
-    boolean glyphGrab = false;
+    final double DRIVE_POWER = 0.8;
 
     @Override
     public void init() {
 
         robot.init(hardwareMap);
 
-        robot.leftClaw.setPosition(0);
-        robot.rightClaw.setPosition(1);
-
-        telemetry.addData("Say", "Hello Driver");
-    }
-
-    @Override
-    public void start() {
-
-        robot.leftClaw.setPosition(.1);
-        robot.rightClaw.setPosition(.9);
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Say", "Hello Driver");    //
     }
 
     @Override
     public void loop() {
-        double left;
-        double right;
+        double speed,angle,rotate;
 
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        // Run wheels in arcade mode
+        speed = Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
+        angle = Math.atan2(gamepad1.left_stick_y,gamepad1.left_stick_x)+3*Math.PI/4;
+        rotate = gamepad1.right_stick_x;
 
-        if (gamepad1.right_bumper) {
-            robot.leftClaw.setPosition(1);
-            robot.rightClaw.setPosition(0);
-        } else if (gamepad1.left_bumper) {
-            robot.leftClaw.setPosition(.1);
-            robot.rightClaw.setPosition(.9);
-        }
+        // Set power of all motors to the correct value
+        robot.frontRight.setPower(DRIVE_POWER * speed * Math.sin(angle) - rotate);
+        robot.backRight.setPower(DRIVE_POWER * speed * Math.cos(angle) - rotate);
+        robot.frontLeft.setPower(DRIVE_POWER * speed * Math.cos(angle) + rotate);
+        robot.backLeft.setPower(DRIVE_POWER * speed * Math.sin(angle) + rotate);
 
-        telemetry.addData("left wheel",  "%.2f", left);
-        telemetry.addData("right wheel", "%.2f", right);
-
-        robot.leftDrive.setPower(left);
-        robot.rightDrive.setPower(right);
-
-        telemetry.addData("left claw", robot.leftClaw.getPosition());
-        telemetry.addData("right claw", robot.rightClaw.getPosition());
+        // Send telemetry message to signify robot running;
+        telemetry.addData("speed",    "%.2f", speed);
+        telemetry.addData("angle",    "%.2f", (Math.toDegrees(angle)-90)%360);
     }
 }

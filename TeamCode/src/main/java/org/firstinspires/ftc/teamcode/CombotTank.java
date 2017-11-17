@@ -82,6 +82,7 @@ public class CombotTank extends OpMode{
         double glyph;
 
         // DRIVER CONTROLS
+
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
@@ -120,6 +121,7 @@ public class CombotTank extends OpMode{
         }
 
         // TELEMETRY
+
         telemetry.addData("left wheel",  "%.2f", left);
         telemetry.addData("right wheel", "%.2f", right);
         telemetry.addData("glyph lift", "%.2f", glyph);
