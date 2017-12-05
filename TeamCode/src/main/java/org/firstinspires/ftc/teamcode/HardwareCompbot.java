@@ -18,6 +18,7 @@ public class HardwareCompbot {
     public Servo leftClaw = null;
     public Servo rightClaw = null;
     public Servo jewelArm = null;
+    public Servo jewelShoulder = null;
     public ColorSensor colorSensor = null;
 
     HardwareMap hwMap = null;
@@ -25,6 +26,8 @@ public class HardwareCompbot {
     public void init(HardwareMap ahwMap) {
 
         hwMap = ahwMap;
+
+        // Find and configure MOTORS
         leftDrive = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         glyphLift = hwMap.get(DcMotor.class, "glyph_lift");
@@ -37,14 +40,18 @@ public class HardwareCompbot {
         rightDrive.setPower(0);
         glyphLift.setPower(0);
 
+        // Find and configure SERVOS
         leftClaw = hwMap.get(Servo.class, "left_claw");
         rightClaw = hwMap.get(Servo.class, "right_claw");
         jewelArm = hwMap.get(Servo.class, "jewel_arm");
+        jewelShoulder = hwMap.get(Servo.class, "jewel_shoulder");
 
         leftClaw.setPosition(0);
         rightClaw.setPosition(1);
         jewelArm.setPosition(1);
+        jewelShoulder.setPosition(0.5);
 
+        // Find an configure SENSORS
         colorSensor = hwMap.get(ColorSensor.class, "sensor_color");
 
     }

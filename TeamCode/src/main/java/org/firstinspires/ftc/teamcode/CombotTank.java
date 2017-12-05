@@ -56,6 +56,10 @@ public class CombotTank extends OpMode{
     HardwareCompbot robot       = new HardwareCompbot();
     boolean fine = false;
 
+    // Arm positions
+    final double UP = 1.0;
+    final double DOWN = 0.2;
+
     @Override
     public void init() {
 
@@ -115,9 +119,9 @@ public class CombotTank extends OpMode{
         }
 
         if (gamepad2.a) {
-            robot.jewelArm.setPosition(.3);
+            robot.jewelArm.setPosition(DOWN);
         } else if (gamepad2.b) {
-            robot.jewelArm.setPosition(1);
+            robot.jewelArm.setPosition(UP);
         }
 
         // TELEMETRY

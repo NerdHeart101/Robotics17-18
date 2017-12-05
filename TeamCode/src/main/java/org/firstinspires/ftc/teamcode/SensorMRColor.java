@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /*
  *
@@ -53,11 +54,12 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  */
 
 @TeleOp(name = "Sensor: MR Color", group = "Sensor")
-
+@Disabled
 public class SensorMRColor extends LinearOpMode {
 
   ColorSensor colorSensor;    // Hardware Device Object
-
+  Servo shoulder;
+  Servo arm;
 
   @Override
   public void runOpMode() {
@@ -80,8 +82,14 @@ public class SensorMRColor extends LinearOpMode {
     // bLedOn represents the state of the LED.
     boolean bLedOn = true;
 
+    // colorSensed represents whether or not a color has been sensed yet
+    boolean colorSensed = false;
+    boolean sensing = false;
+
     // get a reference to our ColorSensor object.
     colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color");
+    shoulder = hardwareMap.get(Servo.class, "shoulder");
+    arm = hardwareMap.get(Servo.class, "arm");
 
     // Set the LED in the beginning
     colorSensor.enableLed(bLedOn);
@@ -110,13 +118,45 @@ public class SensorMRColor extends LinearOpMode {
       // convert the RGB values to HSV values.
       Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
 
+      // For Red team
+
+      if(!colorSensed) {
+        arm.setPosition(.2);
+      }
+
+      if(gamepad1.a) {
+        sensing = true;
+      }
+
+      if(!colorSensed && sensing) {
+        if (colorSensor.red() > colorSensor.blue()) {
+          shoulder.setPosition(0.6);
+          colorSensed = true;
+        } else if (colorSensor.blue() > colorSensor.red()) {
+          shoulder.setPosition(0.4);
+          colorSensed = true;
+        } else
+          shoulder.setPosition(0.5);
+        if(colorSensed) {
+          sleep(1500);
+          shoulder.setPosition(0.5);
+          arm.setPosition(1.0);
+        }
+      } else if (!sensing) {
+        shoulder.setPosition(0.5);
+      }
+
       // send the info back to driver station using telemetry function.
       telemetry.addData("LED", bLedOn ? "On" : "Off");
       telemetry.addData("Clear", colorSensor.alpha());
       telemetry.addData("Red  ", colorSensor.red());
       telemetry.addData("Green", colorSensor.green());
       telemetry.addData("Blue ", colorSensor.blue());
-      telemetry.addData("Hue", hsvValues[0]);
+      //telemetry.addData("Hue", hsvValues[0]);
+      telemetry.addData("Shoulder Position",shoulder.getPosition());
+      telemetry.addData("Arm Position", arm.getPosition());
+      telemetry.addData("Sensing",sensing);
+      telemetry.addData("Sensed",colorSensed);
 
       // change the background color to match the color detected by the RGB sensor.
       // pass a reference to the hue, saturation, and value array as an argument
