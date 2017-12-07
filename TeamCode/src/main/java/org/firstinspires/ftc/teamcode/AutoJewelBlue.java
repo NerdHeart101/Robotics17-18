@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by HSstudent on 12/5/2017.
  */
 
-@Autonomous(name="Red: Jewel", group="red")
-public class AutoJewelRed extends LinearOpMode {
+@Autonomous(name="Blue: Jewel", group="red")
+public class AutoJewelBlue extends LinearOpMode {
 
     HardwareCompbot robot = new HardwareCompbot();
     private ElapsedTime runtime = new ElapsedTime();
@@ -45,12 +45,12 @@ public class AutoJewelRed extends LinearOpMode {
 
         sleep(2000);
 
-        // Sense color and knock jewel
+        // Sense color
         while(opModeIsActive()) {
             telemetry.addData("Status", "Sensing");
             telemetry.update();
             if (robot.colorSensor.red() != robot.colorSensor.blue()) {
-                if (robot.colorSensor.red() > robot.colorSensor.blue()) {
+                if (robot.colorSensor.red() < robot.colorSensor.blue()) {
                     robot.jewelShoulder.setPosition(0.7);
                 } else {
                     robot.jewelShoulder.setPosition(0.3);

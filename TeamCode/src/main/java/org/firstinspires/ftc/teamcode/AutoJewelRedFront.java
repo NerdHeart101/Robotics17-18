@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by HSstudent on 12/5/2017.
  */
 
-@Autonomous(name="Red: Jewel", group="red")
-public class AutoJewelRed extends LinearOpMode {
+@Autonomous(name="Red (Front): Jewel & Park", group="red")
+public class AutoJewelRedFront extends LinearOpMode {
 
     HardwareCompbot robot = new HardwareCompbot();
     private ElapsedTime runtime = new ElapsedTime();
