@@ -68,6 +68,10 @@ public class AutoJewelRedFront extends LinearOpMode {
         telemetry.addData("Status", "Complete");
         telemetry.update();
 
-        while(opModeIsActive()){}
+        while(opModeIsActive()){
+
+
+
+        }
     }
 }
