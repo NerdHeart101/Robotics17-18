@@ -13,6 +13,7 @@ public class AutoJewelBlue extends LinearOpMode {
 
     HardwareCompbot robot = new HardwareCompbot();
     private ElapsedTime runtime = new ElapsedTime();
+    TestDrive drive = new TestDrive();
 
     @Override
     public void runOpMode() {
@@ -68,6 +69,9 @@ public class AutoJewelBlue extends LinearOpMode {
         telemetry.addData("Status", "Complete");
         telemetry.update();
 
-        while(opModeIsActive()){}
+        while(opModeIsActive()){
+
+
+        }
     }
 }

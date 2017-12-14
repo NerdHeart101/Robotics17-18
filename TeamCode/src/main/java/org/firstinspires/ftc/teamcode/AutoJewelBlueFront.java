@@ -15,6 +15,9 @@ public class AutoJewelBlueFront extends LinearOpMode {
 
     HardwareCompbot robot = new HardwareCompbot();
     private ElapsedTime runtime = new ElapsedTime();
+    TestDrive drive = new TestDrive();
+    public static double DRIVE_SPEED = 2.0;
+    public static double TURN_SPEED = 2.0;
 
     @Override
     public void runOpMode() {
@@ -70,6 +73,5 @@ public class AutoJewelBlueFront extends LinearOpMode {
         telemetry.addData("Status", "Complete");
         telemetry.update();
 
-        while(opModeIsActive()){}
     }
 }
