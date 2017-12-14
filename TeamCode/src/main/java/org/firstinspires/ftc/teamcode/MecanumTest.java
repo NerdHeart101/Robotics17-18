@@ -32,11 +32,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="Babybot: MECANUM", group="Babybot")
+@TeleOp(name="MECANUM: TEST", group="mecanum")
 
-public class BabybotMecanum extends OpMode{
+public class MecanumTest extends OpMode{
 
-    HardwareBabybot robot       = new HardwareBabybot();
+    HardwareMecanum robot       = new HardwareMecanum();
 
     final double DRIVE_POWER = 0.8;
 

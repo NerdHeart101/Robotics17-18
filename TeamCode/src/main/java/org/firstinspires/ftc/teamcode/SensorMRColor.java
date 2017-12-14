@@ -152,7 +152,7 @@ public class SensorMRColor extends LinearOpMode {
       telemetry.addData("Red  ", colorSensor.red());
       telemetry.addData("Green", colorSensor.green());
       telemetry.addData("Blue ", colorSensor.blue());
-      //telemetry.addData("Hue", hsvValues[0]);
+      // telemetry.addData("Hue", hsvValues[0]);
       telemetry.addData("Shoulder Position",shoulder.getPosition());
       telemetry.addData("Arm Position", arm.getPosition());
       telemetry.addData("Sensing",sensing);

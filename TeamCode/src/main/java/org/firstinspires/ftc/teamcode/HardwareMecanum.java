@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by hsstudent on 9/28/2017.
  */
 
-public class HardwareBabybot {
+public class HardwareMecanum {
 
     public DcMotor frontLeft = null;
     public DcMotor frontRight = null;

@@ -36,6 +36,10 @@ public class HardwareCompbot {
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
         glyphLift.setDirection(DcMotor.Direction.FORWARD);
 
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        glyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         glyphLift.setPower(0);
