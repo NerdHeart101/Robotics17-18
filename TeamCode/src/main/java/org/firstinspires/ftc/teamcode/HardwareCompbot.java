@@ -7,11 +7,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by hsstudent on 9/28/2017.
+ * This class is used to define our hardware object definitions and registers them into our robot configuration profiles
+ * and names them accordingly. It also sets default values we want for motors, servos, sensors, etc.
  */
 
 public class HardwareCompbot {
 
+    // Define all the hardware objects we need
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
     public DcMotor glyphLift = null;
@@ -21,8 +23,10 @@ public class HardwareCompbot {
     public Servo jewelShoulder = null;
     public ColorSensor colorSensor = null;
 
+    //Create the hardware map object for our robot
     HardwareMap hwMap = null;
 
+    //Initialize the hardware for out bot
     public void init(HardwareMap ahwMap) {
 
         hwMap = ahwMap;
@@ -55,7 +59,7 @@ public class HardwareCompbot {
         jewelArm.setPosition(1);
         jewelShoulder.setPosition(0.5);
 
-        // Find an configure SENSORS
+        // Find an configure SENSOR
         colorSensor = hwMap.get(ColorSensor.class, "sensor_color");
 
     }
