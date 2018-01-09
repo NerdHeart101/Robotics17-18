@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.core;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -35,6 +35,7 @@ import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -196,5 +197,43 @@ public class SensorRevColor extends LinearOpMode {
         }
       });
     }
+  }
+
+  @TeleOp(name="MECANUM: TEST", group="mecanum")
+
+  public static class MecanumTest extends OpMode {
+
+      HardwareMecanum robot       = new HardwareMecanum();
+
+      final double DRIVE_POWER = 0.8;
+
+      @Override
+      public void init() {
+
+          robot.init(hardwareMap);
+
+          // Send telemetry message to signify robot waiting;
+          telemetry.addData("Say", "Hello Driver");    //
+      }
+
+      @Override
+      public void loop() {
+          double speed,angle,rotate;
+
+          // Run wheels in arcade mode
+          speed = Math.hypot(gamepad1.left_stick_x,gamepad1.left_stick_y);
+          angle = Math.atan2(gamepad1.left_stick_y,gamepad1.left_stick_x)+3*Math.PI/4;
+          rotate = gamepad1.right_stick_x;
+
+          // Set power of all motors to the correct value
+          robot.frontRight.setPower(DRIVE_POWER * speed * Math.sin(angle) - rotate);
+          robot.backRight.setPower(DRIVE_POWER * speed * Math.cos(angle) - rotate);
+          robot.frontLeft.setPower(DRIVE_POWER * speed * Math.cos(angle) + rotate);
+          robot.backLeft.setPower(DRIVE_POWER * speed * Math.sin(angle) + rotate);
+
+          // Send telemetry message to signify robot running;
+          telemetry.addData("speed",    "%.2f", speed);
+          telemetry.addData("angle",    "%.2f", (Math.toDegrees(angle)-90)%360);
+      }
   }
 }

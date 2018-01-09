@@ -1,23 +1,21 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.core.HardwareCompbot;
 
 /**
  * Created by HSstudent on 12/5/2017.
  */
 
-@Autonomous(name="Blue (Front): Jewel & Park", group="blue")
-@Disabled
-public class AutoJewelBlueFront extends LinearOpMode {
+@Autonomous(name="Blue: Jewel", group="red")
+public class AutoJewelBlue extends LinearOpMode {
 
     HardwareCompbot robot = new HardwareCompbot();
     private ElapsedTime runtime = new ElapsedTime();
     TestDrive drive = new TestDrive();
-    public static double DRIVE_SPEED = 2.0;
-    public static double TURN_SPEED = 2.0;
 
     @Override
     public void runOpMode() {
@@ -73,5 +71,9 @@ public class AutoJewelBlueFront extends LinearOpMode {
         telemetry.addData("Status", "Complete");
         telemetry.update();
 
+        while(opModeIsActive()){
+
+
+        }
     }
 }

@@ -1,15 +1,19 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.core.HardwareCompbot;
 
 /**
  * Created by HSstudent on 12/5/2017.
  */
 
-@Autonomous(name="Red: Jewel", group="red")
-public class AutoJewelRed extends LinearOpMode {
+@Autonomous(name="Red (Back): Jewel & Park", group="red")
+@Disabled
+public class AutoJewelRedBack extends LinearOpMode {
 
     HardwareCompbot robot = new HardwareCompbot();
     private ElapsedTime runtime = new ElapsedTime();
