@@ -1,19 +1,20 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.core.HardwareCompbot;
+
 /**
  * Created by HSstudent on 12/5/2017.
  */
 
-@Autonomous(name="Blue: Jewel", group="red")
-public class AutoJewelBlue extends LinearOpMode {
+@Autonomous(name="Red: Jewel", group="red")
+public class AutoJewelRed extends LinearOpMode {
 
     HardwareCompbot robot = new HardwareCompbot();
     private ElapsedTime runtime = new ElapsedTime();
-    TestDrive drive = new TestDrive();
 
     @Override
     public void runOpMode() {
@@ -46,12 +47,12 @@ public class AutoJewelBlue extends LinearOpMode {
 
         sleep(2000);
 
-        // Sense color
+        // Sense color and knock jewel
         while(opModeIsActive()) {
             telemetry.addData("Status", "Sensing");
             telemetry.update();
             if (robot.colorSensor.red() != robot.colorSensor.blue()) {
-                if (robot.colorSensor.red() < robot.colorSensor.blue()) {
+                if (robot.colorSensor.red() > robot.colorSensor.blue()) {
                     robot.jewelShoulder.setPosition(0.7);
                 } else {
                     robot.jewelShoulder.setPosition(0.3);
@@ -69,9 +70,6 @@ public class AutoJewelBlue extends LinearOpMode {
         telemetry.addData("Status", "Complete");
         telemetry.update();
 
-        while(opModeIsActive()){
-
-
-        }
+        while(opModeIsActive()){}
     }
 }
