@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.core;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,14 +17,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class HardwareCompbot {
 
     // Define all the hardware objects we need
-    public DcMotor leftDrive = null;
-    public DcMotor rightDrive = null;
+    public DcMotor frontRight = null;
+    public DcMotor backRight = null;
+    public DcMotor frontLeft = null;
+    public DcMotor backLeft = null;
     public DcMotor glyphLift = null;
     public Servo leftClaw = null;
     public Servo rightClaw = null;
     public Servo jewelArm = null;
     public Servo jewelShoulder = null;
     public ColorSensor colorSensor = null;
+    public ModernRoboticsI2cGyro gyroSensor = null;
+
+    // TODO: Configure gyro sensor
 
     //Create the hardware map object for our robot
     HardwareMap hwMap = null;
@@ -32,20 +40,28 @@ public class HardwareCompbot {
         hwMap = ahwMap;
 
         // Find and configure MOTORS
-        leftDrive = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        glyphLift = hwMap.get(DcMotor.class, "glyph_lift");
+        frontRight      = hwMap.dcMotor.get("front_right_drive");
+        backRight       = hwMap.dcMotor.get("back_right_drive");
+        frontLeft       = hwMap.dcMotor.get("front_left_drive");
+        backLeft        = hwMap.dcMotor.get("back_left_drive");
+        glyphLift       = hwMap.dcMotor.get("glyph_lift");
 
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
         glyphLift.setDirection(DcMotor.Direction.FORWARD);
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        glyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        glyphLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
+        frontLeft.setPower(0);
+        backLeft.setPower(0);
         glyphLift.setPower(0);
 
         // Find and configure SERVOS
@@ -61,6 +77,7 @@ public class HardwareCompbot {
 
         // Find an configure SENSOR
         colorSensor = hwMap.get(ColorSensor.class, "sensor_color");
+        gyroSensor = hwMap.get(ModernRoboticsI2cGyro.class, "gyro_sensor");
 
     }
 

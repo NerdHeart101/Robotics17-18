@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.core.HardwareCompbot;
  * Created by HSstudent on 12/5/2017.
  */
 
-@Autonomous(name="Auto: ALL", group="auto")
-public class AutoAll extends LinearOpMode {
+@Autonomous(name="Auto: Front Blue", group="auto")
+public class AutoBlueFront extends LinearOpMode {
 
     HardwareCompbot robot = new HardwareCompbot();
     private ElapsedTime runtime = new ElapsedTime();
@@ -33,7 +33,7 @@ public class AutoAll extends LinearOpMode {
     // autoPrefs is a placeholder for a GUI to select each variable
     // color: true means red, false means blue
     // position: true means front, false means back
-    private boolean[] autoPrefs = {true,true};
+    private boolean[] autoPrefs = {false,true};
 
     private boolean color = autoPrefs[0];
     private boolean position = autoPrefs[1];

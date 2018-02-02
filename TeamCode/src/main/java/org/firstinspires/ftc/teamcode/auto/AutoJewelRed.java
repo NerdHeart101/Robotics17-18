@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.core.HardwareCompbot;
 
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.core.HardwareCompbot;
  */
 
 @Autonomous(name="Red: Jewel", group="red")
+@Disabled
 public class AutoJewelRed extends LinearOpMode {
 
     HardwareCompbot robot = new HardwareCompbot();

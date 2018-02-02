@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.core.HardwareCompbot;
  * Created by HSstudent on 12/5/2017.
  */
 
-@Autonomous(name="Auto: ALL", group="auto")
-public class AutoAll extends LinearOpMode {
+@Autonomous(name="Auto: Front Red", group="auto")
+public class AutoRedFront extends LinearOpMode {
 
     HardwareCompbot robot = new HardwareCompbot();
     private ElapsedTime runtime = new ElapsedTime();

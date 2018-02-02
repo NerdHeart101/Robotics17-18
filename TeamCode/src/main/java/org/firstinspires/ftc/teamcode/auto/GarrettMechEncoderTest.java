@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.core.HardwareMecanum;
@@ -12,6 +13,8 @@ import org.firstinspires.ftc.teamcode.core.MechDriveBase;
  */
 
 @Autonomous(name = "Garrett Encoder", group = "Compbot")
+@Disabled
+
 public class GarrettMechEncoderTest extends MechDriveBase {
 
     static final double     DRIVE_SPEED             = 0.6;
