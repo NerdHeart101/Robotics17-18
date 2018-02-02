@@ -18,20 +18,22 @@ public class AutoAll extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     // Encoder variables
-    static final double     TURN_RADIUS             = 6.25;
-    static final double     COUNTS_PER_MOTOR_REV    = 280 ;    // eg: TETRIX Motor Encoder
+    static final double     TURN_RADIUS             = 8.24;     // In inches
+    static final double     COUNTS_PER_MOTOR_REV    = 1556;     // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.2;
-    static final double     TURN_SPEED              = 0.5;
+    static final double     DRIVE_SPEED             = 0.5 ;
+    // Note: TURN_SPEED is used for the first part of the turn, FINE_TURN for the last part of it
+    static final double     TURN_SPEED              = 0.25;
+    static final double     FINE_TURN               = 0.1 ;
 
     // Auto control variables
     // autoPrefs is a placeholder for a GUI to select each variable
     // color: true means red, false means blue
     // position: true means front, false means back
-    private boolean[] autoPrefs = {true,false};
+    private boolean[] autoPrefs = {false,true};
 
     private boolean color = autoPrefs[0];
     private boolean position = autoPrefs[1];
@@ -41,7 +43,7 @@ public class AutoAll extends LinearOpMode {
 
         // Arm positions
         final double up = 1.0;
-        final double down = 0.25;
+        final double down = 0.22;
 
         // Initialization procedures
         robot.init(hardwareMap);
@@ -54,25 +56,28 @@ public class AutoAll extends LinearOpMode {
         robot.jewelArm.setPosition(up);
         robot.jewelShoulder.setPosition(0.5);
 
+        robot.gyroSensor.calibrate();
+
         waitForStart();
-        /*
+
         // BEGIN AUTONOMOUS
 
         // Grab glyph, get arm in sensing position
 
-        robot.leftClaw.setPosition(1);
-        robot.rightClaw.setPosition(0);
+        glyphGrab(true);
+        glyph(0.5,1);
 
         robot.jewelArm.setPosition(down);
 
         sleep(2000);
 
         // Sense color and knock jewel
+        // Note: higher shoulder values mean farther forward
         while(opModeIsActive()) {
             telemetry.addData("Status", "Sensing");
             telemetry.update();
             if (robot.colorSensor.red() != robot.colorSensor.blue()) {
-                if ((robot.colorSensor.red() > robot.colorSensor.blue()) == color) {
+                if ((robot.colorSensor.blue() > robot.colorSensor.red()) == color) {
                     robot.jewelShoulder.setPosition(0.7);
                 } else {
                     robot.jewelShoulder.setPosition(0.3);
@@ -90,22 +95,72 @@ public class AutoAll extends LinearOpMode {
 
         // Drive to safe zone
 
-        // Rotate the correct direction based on starting corner
-        if(color == position) {
-            rotateInPlace(-18.5);
-        } else {
-            rotateInPlace(18.5);
+        // Front stones
+        if (position) {
+            // Red
+            if(color) {
+                encoderDrive(27.0, 180);
+                gyroRotate(-225, TURN_SPEED);
+                glyph(-0.5,1);
+                glyphGrab(false);
+                encoderDrive(3,180);
+                sleep(500);
+                glyphGrab(true);
+                glyph(0.5,1);
+                encoderDrive(13,0);
+                glyph(-0.5,1);
+                glyphGrab(false);
+                encoderDrive(2,180);
+            }
+            // Blue
+            else {
+                encoderDrive(27.0, 0);
+                gyroRotate(45, TURN_SPEED);
+                glyph(-0.5,1);
+                glyphGrab(false);
+                encoderDrive(3,180);
+                sleep(500);
+                glyphGrab(true);
+                glyph(0.5,1);
+                encoderDrive(13,0);
+                glyph(-0.5,1);
+                glyphGrab(false);
+                encoderDrive(2,180);
+            }
         }
-
-        // Drive straight forward or backward based on color
-        if(color) {
-            encoderDrive(DRIVE_SPEED, -31.6, -31.6, 10);
-        } else {
-            encoderDrive(DRIVE_SPEED, 31.6, 31.6, 10);
+        // Back stones
+        else {
+            // Red
+            if(color) {
+                encoderDrive(27,180);
+                gyroRotate(-135,TURN_SPEED);
+                glyph(-0.5,1);
+                glyphGrab(false);
+                encoderDrive(3,180);
+                sleep(500);
+                glyphGrab(true);
+                glyph(0.5,1);
+                encoderDrive(7,0);
+                glyph(-0.5,1);
+                glyphGrab(false);
+                encoderDrive(2,0);
+            }
+            // Blue
+            else {
+                encoderDrive(27,0);
+                gyroRotate(-45,TURN_SPEED);
+                glyph(-0.5,1);
+                glyphGrab(false);
+                encoderDrive(3,180);
+                sleep(500);
+                glyphGrab(true);
+                glyph(0.5,1);
+                encoderDrive(7,0);
+                glyph(-0.5,1);
+                glyphGrab(false);
+                encoderDrive(2,0);
+            }
         }
-        */
-
-        encoderDrive(DRIVE_SPEED, 10,10,10);
 
         telemetry.addData("Status", "Complete");
         telemetry.update();
@@ -113,61 +168,142 @@ public class AutoAll extends LinearOpMode {
         while(opModeIsActive()){}
     }
 
-    // Method by FIRST to drive a certain number of inches
-    public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
+    public void glyph(double power, double time) {
+        double endTime = runtime.seconds() + time;
+        robot.glyphLift.setPower(power);
+        while(opModeIsActive() && runtime.seconds() < endTime) {}
+        robot.glyphLift.setPower(0.0);
+    }
 
-        // Ensure that the opmode is still active
+    // Method by FIRST to drive a certain number of inches
+    public void encoderDrive(double inches, double angle) {
+        encoderDrive(inches, angle, DRIVE_SPEED, inches / DRIVE_SPEED);
+    }
+
+    public void encoderDrive(double inches, double angle, double speed) {
+        encoderDrive(inches, angle, speed, inches / DRIVE_SPEED);
+    }
+
+    public void encoderDrive(double inches, double angle, double speed, double timeout) {
+        int fl, fr, bl, br;
         if (opModeIsActive()) {
 
-            // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.leftDrive.setTargetPosition(newLeftTarget);
-            robot.rightDrive.setTargetPosition(newRightTarget);
+            angle += 45;
+            fl = robot.frontLeft.getCurrentPosition() + (int) (COUNTS_PER_INCH * Math.cos(Math.toRadians(angle)) * inches);
+            fr = robot.frontRight.getCurrentPosition() + (int) (COUNTS_PER_INCH * Math.sin(Math.toRadians(angle)) * inches);
+            bl = robot.backLeft.getCurrentPosition() + (int) (COUNTS_PER_INCH * Math.sin(Math.toRadians(angle)) * inches);
+            br = robot.backRight.getCurrentPosition() + (int) (COUNTS_PER_INCH * Math.cos(Math.toRadians(angle)) * inches);
 
-            // Turn On RUN_TO_POSITION
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            telemetry.addData("Path", "fl %d :: br %d :: fr %d :: bl %d", fl, br, fr, bl);
+            telemetry.update();
 
-            // reset the timeout time and start motion.
+            robot.frontLeft.setTargetPosition(fl);
+            robot.frontRight.setTargetPosition(fr);
+            robot.backLeft.setTargetPosition(bl);
+            robot.backRight.setTargetPosition(br);
+
+            robot.frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
             runtime.reset();
-            robot.leftDrive.setPower(Math.abs(speed));
-            robot.rightDrive.setPower(Math.abs(speed));
+            robot.frontLeft.setPower(speed * Math.abs(Math.cos(Math.toRadians(angle))));
+            robot.frontRight.setPower(speed * Math.abs(Math.sin(Math.toRadians(angle))));
+            robot.backLeft.setPower(speed * Math.abs(Math.sin(Math.toRadians(angle))));
+            robot.backRight.setPower(speed * Math.abs(Math.cos(Math.toRadians(angle))));
 
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
+            while ( robot.frontLeft.isBusy() && robot.frontRight.isBusy() &&
+                    robot.backLeft.isBusy() && robot.backRight.isBusy() &&
+                    runtime.seconds() < timeout && opModeIsActive()) {
+                /* int frontEnc = Math.abs(robot.frontLeft.getCurrentPosition());
+                int backEnc = Math.abs(robot.backLeft.getCurrentPosition());
+                int compareEnc = Math.max(frontEnc, backEnc); */
 
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                        robot.leftDrive.getCurrentPosition(),
-                        robot.rightDrive.getCurrentPosition());
+                telemetry.addData("Path", "fl %d :: br %d :: fr %d :: bl %d", fl, br, fr, bl);
+                telemetry.addData("Position", "fl %d :: br %d :: fr %d :: bl %d",
+                        robot.frontLeft.getCurrentPosition(), robot.backRight.getCurrentPosition(),
+                        robot.frontRight.getCurrentPosition(), robot.backLeft.getCurrentPosition());
+                telemetry.addData("Timeout", "%.2f : %.2f", timeout, runtime.seconds());
                 telemetry.update();
+                /* if (compareEnc > Math.max(Math.abs(fl), Math.abs(bl))) {
+                    break;
+                } */
             }
 
-            // Stop all motion;
-            robot.leftDrive.setPower(0);
-            robot.rightDrive.setPower(0);
+            robot.frontLeft.setPower(0);
+            robot.frontRight.setPower(0);
+            robot.backLeft.setPower(0);
+            robot.backRight.setPower(0);
 
-            // Turn off RUN_TO_POSITION
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
+            robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
+    // Positive degrees is left
+    public void gyroRotate(int degrees, double power) {
+        double rotatePower;
+
+        // Get target heading
+        int targetHeading = (robot.gyroSensor.getHeading() + degrees + 360) % 360;
+
+        // Set power to the appropriate sign depending on direction
+        if(degrees > 0) {
+            rotatePower = power;
+        } else {
+            rotatePower = -power;
+        }
+
+        // Apply power
+        robot.frontRight.setPower(rotatePower);
+        robot.backRight.setPower(rotatePower);
+        robot.frontLeft.setPower(-rotatePower);
+        robot.backLeft.setPower(-rotatePower);
+
+        while(opModeIsActive()) {
+
+            telemetry.addData("target heading",targetHeading);
+            telemetry.addData("current heading",robot.gyroSensor.getHeading());
+            telemetry.addData("heading check",Math.abs(targetHeading-robot.gyroSensor.getHeading()) % 360);
+            telemetry.update();
+
+            // When we are within 45 degrees of the target, move slower
+            if(Math.abs(targetHeading - robot.gyroSensor.getHeading()) % 360 <= 15) {
+                robot.frontRight.setPower(rotatePower / power * FINE_TURN);
+                robot.backRight.setPower(rotatePower / power * FINE_TURN);
+                robot.frontLeft.setPower(-rotatePower / power * FINE_TURN);
+                robot.backLeft.setPower(-rotatePower / power * FINE_TURN);
+            }
+
+            // If we are within 3 degrees of the target, end the rotation
+            if(Math.abs(targetHeading - robot.gyroSensor.getHeading()) % 360 <= 3) {
+                break;
+            }
+        }
+
+        // Turn motors off
+        robot.frontRight.setPower(0);
+        robot.backRight.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.backLeft.setPower(0);
+
+    }
+
+    public void glyphGrab(boolean grabbing) {
+        if(grabbing) {
+            robot.leftClaw.setPosition(1);
+            robot.rightClaw.setPosition(0);
+        } else {
+            robot.leftClaw.setPosition(0);
+            robot.rightClaw.setPosition(1);
+        }
+        sleep(500);
+    }
+
+    // DEPRECATED: For tank drive
     // Positive degrees is left (Counter clockwise)
     public void rotateInPlace(double degrees) {
         degrees += 5;   // 5 degrees are added to account for errors in the encoders
@@ -176,6 +312,7 @@ public class AutoAll extends LinearOpMode {
         double leftArc = -arc;
         double rightArc = arc;
         double rotateTimeout = Math.abs(arc)*TURN_SPEED*2;
+
         // Use the encoderDrive method to perform the move
         encoderDrive(TURN_SPEED, leftArc, rightArc, rotateTimeout);
     }

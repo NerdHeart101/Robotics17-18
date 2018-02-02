@@ -49,7 +49,7 @@ import org.firstinspires.ftc.teamcode.core.HardwareCompbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Compbot: TANK ONE DRIVER", group="Compbot")
+@TeleOp(name="(DEPRECATED) Compbot: TANK ONE DRIVER", group="Compbot")
 
 public class CombotTankOnePerson extends OpMode{
 
@@ -103,8 +103,8 @@ public class CombotTankOnePerson extends OpMode{
             right *= .15;
         }
 
-        robot.leftDrive.setPower(left);
-        robot.rightDrive.setPower(right);
+        //robot.leftDrive.setPower(left);
+        //robot.rightDrive.setPower(right);
 
         // OPERATOR CONTROLS
 
