@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -50,8 +49,8 @@ import org.firstinspires.ftc.teamcode.core.HardwareCompbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="(DEPRECATED) Compbot: TANK ONE DRIVER", group="Compbot")
-@Disabled
+@TeleOp(name="Compbot: TANK ONE DRIVER", group="Compbot")
+
 public class CombotTankOnePerson extends OpMode{
 
     /* Declare OpMode members. */
@@ -104,8 +103,8 @@ public class CombotTankOnePerson extends OpMode{
             right *= .15;
         }
 
-        //robot.leftDrive.setPower(left);
-        //robot.rightDrive.setPower(right);
+        robot.leftDrive.setPower(left);
+        robot.rightDrive.setPower(right);
 
         // OPERATOR CONTROLS
 
