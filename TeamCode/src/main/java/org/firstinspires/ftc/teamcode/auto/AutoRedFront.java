@@ -50,8 +50,8 @@ public class AutoRedFront extends LinearOpMode {
 
         robot.colorSensor.enableLed(true);
 
-        robot.leftClaw.setPosition(0);
-        robot.rightClaw.setPosition(1);
+        robot.bottomLeftClaw.setPosition(0);
+        robot.bottomRightClaw.setPosition(1);
 
         robot.jewelArm.setPosition(up);
         robot.jewelShoulder.setPosition(0.5);
@@ -296,11 +296,11 @@ public class AutoRedFront extends LinearOpMode {
 
     public void glyphGrab(boolean grabbing) {
         if(grabbing) {
-            robot.leftClaw.setPosition(1);
-            robot.rightClaw.setPosition(0);
+            robot.bottomLeftClaw.setPosition(1);
+            robot.bottomRightClaw.setPosition(0);
         } else {
-            robot.leftClaw.setPosition(0);
-            robot.rightClaw.setPosition(1);
+            robot.bottomLeftClaw.setPosition(0);
+            robot.bottomRightClaw.setPosition(1);
         }
         sleep(500);
     }

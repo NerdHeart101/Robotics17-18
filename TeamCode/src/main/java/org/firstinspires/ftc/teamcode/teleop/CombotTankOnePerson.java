@@ -66,8 +66,8 @@ public class CombotTankOnePerson extends OpMode{
 
         robot.init(hardwareMap);
 
-        robot.leftClaw.setPosition(0);
-        robot.rightClaw.setPosition(1);
+        robot.bottomLeftClaw.setPosition(0);
+        robot.bottomRightClaw.setPosition(1);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -76,8 +76,8 @@ public class CombotTankOnePerson extends OpMode{
 
     @Override
     public void start() {
-        robot.leftClaw.setPosition(.1);
-        robot.rightClaw.setPosition(.9);
+        robot.bottomLeftClaw.setPosition(.1);
+        robot.bottomRightClaw.setPosition(.9);
     }
 
     @Override
@@ -102,21 +102,21 @@ public class CombotTankOnePerson extends OpMode{
             left *= .15;
             right *= .15;
         }
-
+/*
         robot.leftDrive.setPower(left);
         robot.rightDrive.setPower(right);
-
+*/
         // OPERATOR CONTROLS
 
         glyph = gamepad1.right_trigger - gamepad1.left_trigger;
         robot.glyphLift.setPower(glyph);
 
         if (gamepad1.right_bumper) {
-            robot.leftClaw.setPosition(1);
-            robot.rightClaw.setPosition(0);
+            robot.bottomLeftClaw.setPosition(1);
+            robot.bottomRightClaw.setPosition(0);
         } else if (gamepad1.left_bumper) {
-            robot.leftClaw.setPosition(.1);
-            robot.rightClaw.setPosition(.9);
+            robot.bottomLeftClaw.setPosition(.1);
+            robot.bottomRightClaw.setPosition(.9);
         }
 
         if (gamepad1.a) {

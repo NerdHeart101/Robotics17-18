@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode.core;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -22,8 +19,10 @@ public class HardwareCompbot {
     public DcMotor frontLeft = null;
     public DcMotor backLeft = null;
     public DcMotor glyphLift = null;
-    public Servo leftClaw = null;
-    public Servo rightClaw = null;
+    public Servo bottomLeftClaw = null;
+    public Servo bottomRightClaw = null;
+    public Servo topLeftClaw = null;
+    public Servo topRightClaw = null;
     public Servo jewelArm = null;
     public Servo jewelShoulder = null;
     public ColorSensor colorSensor = null;
@@ -65,13 +64,17 @@ public class HardwareCompbot {
         glyphLift.setPower(0);
 
         // Find and configure SERVOS
-        leftClaw = hwMap.get(Servo.class, "left_claw");
-        rightClaw = hwMap.get(Servo.class, "right_claw");
+        bottomLeftClaw = hwMap.get(Servo.class, "bottom_left_claw");
+        bottomRightClaw = hwMap.get(Servo.class, "bottom_right_claw");
+        topLeftClaw = hwMap.get(Servo.class, "top_left_claw");
+        topRightClaw = hwMap.get(Servo.class, "top_right_claw");
         jewelArm = hwMap.get(Servo.class, "jewel_arm");
         jewelShoulder = hwMap.get(Servo.class, "jewel_shoulder");
 
-        leftClaw.setPosition(0);
-        rightClaw.setPosition(1);
+        bottomLeftClaw.setPosition(0);
+        bottomRightClaw.setPosition(1);
+        topLeftClaw.setPosition(0);
+        topRightClaw.setPosition(1);
         jewelArm.setPosition(1);
         jewelShoulder.setPosition(0.5);
 

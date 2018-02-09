@@ -27,8 +27,8 @@ public class AutoJewelBlue extends LinearOpMode {
 
         robot.colorSensor.enableLed(true);
 
-        robot.leftClaw.setPosition(0);
-        robot.rightClaw.setPosition(1);
+        robot.bottomLeftClaw.setPosition(0);
+        robot.bottomRightClaw.setPosition(1);
 
         robot.jewelArm.setPosition(up);
         robot.jewelShoulder.setPosition(0.5);
@@ -39,8 +39,8 @@ public class AutoJewelBlue extends LinearOpMode {
 
         // Grab glyph, get arm in sensing position
 
-        robot.leftClaw.setPosition(1);
-        robot.rightClaw.setPosition(0);
+        robot.bottomLeftClaw.setPosition(1);
+        robot.bottomRightClaw.setPosition(0);
 
         robot.jewelArm.setPosition(down);
 
