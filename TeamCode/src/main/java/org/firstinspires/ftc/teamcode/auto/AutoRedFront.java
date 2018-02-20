@@ -98,71 +98,12 @@ public class AutoRedFront extends LinearOpMode {
         robot.jewelShoulder.setPosition(0.5);
 
         // Drive to safe zone
-
-        // Front stones
-        if (position) {
-            // Red
-            if(color) {
-                encoderDrive(26.0, 180);
-                gyroRotate(-225, TURN_SPEED);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(13,0);
-                glyph(-0.5,1);
-                glyphGrab(false);
-            }
-            // Blue
-            else {
-                encoderDrive(28.0, 0);
-                gyroRotate(45, TURN_SPEED);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(13,0);
-                glyph(-0.5,1);
-                glyphGrab(false);
-            }
-        }
-        // Back stones
-        else {
-            // Red
-            if(color) {
-                encoderDrive(26.0,180);
-                gyroRotate(-135,TURN_SPEED);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(7,0);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(2,0);
-            }
-            // Blue
-            else {
-                encoderDrive(28.0,0);
-                gyroRotate(-45,TURN_SPEED);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(7,0);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(2,0);
-            }
-        }
+        encoderDrive(26, 180);
+        gyroRotate(-225, TURN_SPEED);
+        encoderDrive(11,0);
+        glyph(-0.5,1);
+        glyphGrab(false);
+        encoderDrive(3,180);
 
         telemetry.addData("Status", "Complete");
         telemetry.update();
@@ -272,7 +213,7 @@ public class AutoRedFront extends LinearOpMode {
             telemetry.addData("heading check",Math.abs(targetHeading-robot.gyroSensor.getHeading()) % 360);
             telemetry.update();
 
-            // When we are within 45 degrees of the target, move slower
+            // When we are within 15 degrees of the target, move slower
             if(Math.abs(targetHeading - robot.gyroSensor.getHeading()) % 360 <= 15) {
                 robot.frontRight.setPower(rotatePower / power * FINE_TURN);
                 robot.backRight.setPower(rotatePower / power * FINE_TURN);
@@ -299,8 +240,8 @@ public class AutoRedFront extends LinearOpMode {
             robot.bottomLeftClaw.setPosition(1);
             robot.bottomRightClaw.setPosition(0);
         } else {
-            robot.bottomLeftClaw.setPosition(0);
-            robot.bottomRightClaw.setPosition(1);
+            robot.bottomLeftClaw.setPosition(0.45);
+            robot.bottomRightClaw.setPosition(0.45);
         }
         sleep(500);
     }

@@ -12,8 +12,11 @@ public class CombotArcade extends OpMode{
     /* Declare OpMode members. */
     HardwareCompbot robot       = new HardwareCompbot();
     boolean fine = false;
-    double bottomClaw = 0.0;
-    double topClaw = 0.0;
+    int bottomClaw = 0;
+    int topClaw = 0;
+
+    double[] bottomPositions = {0.0,0.5,0.6};
+    double[] topPositions = {0.0,0.4,0.55};
 
     // Values to only let claws move once per press
     boolean bottomPress = false;
@@ -31,11 +34,11 @@ public class CombotArcade extends OpMode{
 
         robot.init(hardwareMap);
 
-        robot.bottomLeftClaw.setPosition(bottomClaw);
-        robot.bottomRightClaw.setPosition(1 - bottomClaw);
+        robot.bottomLeftClaw.setPosition(0.0);
+        robot.bottomRightClaw.setPosition(1.0);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Drivers");    //
+        telemetry.addData("Say", "Hello Drivers");
 
     }
 
@@ -45,6 +48,8 @@ public class CombotArcade extends OpMode{
         double angle;
         double rotate;
         double glyph;
+        double bottomPosition;
+        double topPosition;
 
         // DRIVER CONTROLS
 
@@ -77,41 +82,45 @@ public class CombotArcade extends OpMode{
 
         // Glyph claws: right to close farther, left to close farther
         if(gamepad2.right_trigger > 0.1 && !bottomPress) {
-            bottomClaw += 0.5;
+            bottomClaw++;
             bottomPress = true;
         } else if (gamepad2.left_trigger > 0.1 && !bottomPress) {
-            bottomClaw -= 0.5;
+            bottomClaw--;
             bottomPress = true;
-        } else if (gamepad2.right_trigger < 0.1 || gamepad2.left_trigger < 0.1) {
+        } else if (gamepad2.right_trigger < 0.1 && gamepad2.left_trigger < 0.1) {
             bottomPress = false;
         }
 
         if(gamepad2.right_bumper && !topPress) {
-            topClaw += 0.5;
-            bottomPress = true;
+            topClaw++;
+            topPress = true;
         } else if (gamepad2.left_bumper && !topPress) {
-            topClaw -= 0.5;
-            bottomPress = true;
+            topClaw--;
+            topPress = true;
         } else if (!gamepad2.right_bumper && !gamepad2.left_bumper) {
             topPress = false;
         }
 
-        // Keep claw values between 0 and 1
-        if(bottomClaw > 1.0) {
-            bottomClaw = 1.0;
-        } else if (bottomClaw < 0.0) {
-            bottomClaw = 0.0;
+        // Keep claw values between useful values
+        if(bottomClaw > 2) {
+            bottomClaw = 2;
+        } else if (bottomClaw < 0) {
+            bottomClaw = 0;
         }
-        if(topClaw > 1.0) {
-            topClaw = 1.0;
-        } else if (topClaw < 0.0) {
-            topClaw = 0.0;
+        if(topClaw > 2) {
+            topClaw = 0;
+        } else if (topClaw < 0) {
+            topClaw = 0;
         }
 
-        robot.bottomLeftClaw.setPosition(1 - bottomClaw);
-        robot.bottomRightClaw.setPosition(bottomClaw);
-        robot.topLeftClaw.setPosition(1 - topClaw);
-        robot.topRightClaw.setPosition(topClaw);
+        // Use appropriate positions
+        bottomPosition = bottomPositions[bottomClaw];
+        topPosition = topPositions[topClaw];
+
+        robot.bottomLeftClaw.setPosition(bottomPosition);
+        robot.bottomRightClaw.setPosition(1 - bottomPosition);
+        robot.topLeftClaw.setPosition(topPosition);
+        robot.topRightClaw.setPosition(1 - topPosition);
 
         // TELEMETRY
 

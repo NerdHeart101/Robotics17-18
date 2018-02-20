@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.core.HardwareCompbot;
 
 /**
@@ -28,6 +31,8 @@ public class AutoAll extends LinearOpMode {
     // Note: TURN_SPEED is used for the first part of the turn, FINE_TURN for the last part of it
     static final double     TURN_SPEED              = 0.25;
     static final double     FINE_TURN               = 0.1 ;
+
+    VuforiaLocalizer vuforia;
 
     // Auto control variables
     // autoPrefs is a placeholder for a GUI to select each variable
@@ -99,19 +104,12 @@ public class AutoAll extends LinearOpMode {
 
         // Drive to safe zone
 
-        // Front stones
         if (position) {
             // Red
             if(color) {
                 encoderDrive(26.0, 180);
                 gyroRotate(-225, TURN_SPEED);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(13,0);
+                encoderDrive(10,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
             }
@@ -119,13 +117,7 @@ public class AutoAll extends LinearOpMode {
             else {
                 encoderDrive(28.0, 0);
                 gyroRotate(45, TURN_SPEED);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(13,0);
+                encoderDrive(10,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
             }
@@ -136,29 +128,19 @@ public class AutoAll extends LinearOpMode {
             if(color) {
                 encoderDrive(26.0,180);
                 gyroRotate(-135,TURN_SPEED);
+                encoderDrive(4,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(7,0);
-                glyph(-0.5,1);
-                glyphGrab(false);
+                encoderDrive(2,0);
             }
             // Blue
             else {
                 encoderDrive(28.0,0);
                 gyroRotate(-45,TURN_SPEED);
+                encoderDrive(4,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(7,0);
-                glyph(-0.5,1);
-                glyphGrab(false);
+                encoderDrive(2,0);
             }
         }
 
@@ -270,7 +252,7 @@ public class AutoAll extends LinearOpMode {
             telemetry.addData("heading check",Math.abs(targetHeading-robot.gyroSensor.getHeading()) % 360);
             telemetry.update();
 
-            // When we are within 45 degrees of the target, move slower
+            // When we are within 15 degrees of the target, move slower
             if(Math.abs(targetHeading - robot.gyroSensor.getHeading()) % 360 <= 15) {
                 robot.frontRight.setPower(rotatePower / power * FINE_TURN);
                 robot.backRight.setPower(rotatePower / power * FINE_TURN);
@@ -297,8 +279,8 @@ public class AutoAll extends LinearOpMode {
             robot.bottomLeftClaw.setPosition(1);
             robot.bottomRightClaw.setPosition(0);
         } else {
-            robot.bottomLeftClaw.setPosition(0);
-            robot.bottomRightClaw.setPosition(1);
+            robot.bottomLeftClaw.setPosition(0.5);
+            robot.bottomRightClaw.setPosition(0.5);
         }
         sleep(500);
     }
@@ -315,5 +297,30 @@ public class AutoAll extends LinearOpMode {
 
         // Use the encoderDrive method to perform the move
         encoderDrive(TURN_SPEED, leftArc, rightArc, rotateTimeout);
+    }
+
+    // Get the bonus position for the glyph. If nothing is found, use the position default
+    public int glyphBonus() {
+        // No camera monitor, for competition
+        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        // With camera monitor, for debugging
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        // Enter our license key
+        parameters.vuforiaLicenseKey = "AShjAuD/////AAAAGQ1/wLnLiEA0ioTqRWYn+SxShC+UUo94K2KMWDmywIJ7j7mBSh8V5XGWJN/9oBiD/pAzdAj3NSoJ2IJ1Nu0ZKSf7NKxeFlWFYrexIs25lYjryT/ag7+RQYT158sa1H0Fe9+Y//H+qZvO63odc6QhBadD3yEmkYfqbANDud8IcesvB/FdCnKdEpaAdyzDJBBmPGW3MFTn18Zb3Vm+44MVSTnk9a32HE2D4dViN477aIGh/jacPTW+xdlpSQSfwXb1+i8rFPF7chm1XY8LGUvtiDaSsS9LuuiOrJ7OsINLmm5xAGxaqHvf1LbF+aUD1iKrLEWG4EMlyIpPC8mZCsw6cp7LwQJLgWsvsIqRcLps2gEu";
+
+        // Use the front camera
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+
+        // Load the VuMark targets for Relic Recovery
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+
+        // Start searching for a trackable
+        relicTrackables.activate();
+
+        //while(vuMark);
+        return 0;
     }
 }

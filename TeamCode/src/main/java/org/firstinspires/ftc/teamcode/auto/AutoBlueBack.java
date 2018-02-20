@@ -68,6 +68,7 @@ public class AutoBlueBack extends LinearOpMode {
         glyph(0.5,1);
 
         robot.jewelArm.setPosition(down);
+        robot.jewelShoulder.setPosition(0.5);
 
         sleep(2000);
 
@@ -97,72 +98,14 @@ public class AutoBlueBack extends LinearOpMode {
         robot.jewelArm.setPosition(up);
         robot.jewelShoulder.setPosition(0.5);
 
-        // Drive to safe zone
-
-        // Front stones
-        if (position) {
-            // Red
-            if(color) {
-                encoderDrive(26.0, 180);
-                gyroRotate(-225, TURN_SPEED);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(13,0);
-                glyph(-0.5,1);
-                glyphGrab(false);
-            }
-            // Blue
-            else {
-                encoderDrive(28.0, 0);
-                gyroRotate(45, TURN_SPEED);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(13,0);
-                glyph(-0.5,1);
-                glyphGrab(false);
-            }
-        }
-        // Back stones
-        else {
-            // Red
-            if(color) {
-                encoderDrive(26.0,180);
-                gyroRotate(-135,TURN_SPEED);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(7,0);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(2,0);
-            }
-            // Blue
-            else {
-                encoderDrive(28.0,0);
-                gyroRotate(-45,TURN_SPEED);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(3,180);
-                sleep(500);
-                glyphGrab(true);
-                glyph(0.5,1);
-                encoderDrive(7,0);
-                glyph(-0.5,1);
-                glyphGrab(false);
-                encoderDrive(2,0);
-            }
-        }
+        // Drive to safe zone & score glyph
+        encoderDrive(28,0);
+        gyroRotate(-45,TURN_SPEED);
+        encoderDrive(8,0);
+        glyph(-0.5,1);
+        glyphGrab(false);
+        encoderDrive(4,180);
+        encoderDrive(2,0);
 
         telemetry.addData("Status", "Complete");
         telemetry.update();
