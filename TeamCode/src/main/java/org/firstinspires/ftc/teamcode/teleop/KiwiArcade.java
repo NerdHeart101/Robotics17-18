@@ -42,7 +42,8 @@ public class KiwiArcade extends OpMode {
         motorThreePower = speed * (moveX * -0.5 - moveY * .866) + rotate;
 
         maxPower = max(motorOnePower, motorTwoPower, motorThreePower);
-        drift = -(motorOnePower + motorTwoPower + motorThreePower);
+
+        motorTwoPower *= .925;
 
         if (maxPower > 1.0) {
             motorOnePower /= maxPower;
@@ -56,7 +57,6 @@ public class KiwiArcade extends OpMode {
 
         telemetry.addData("moveX", moveX);
         telemetry.addData("moveY", moveY);
-        telemetry.addData("drift", drift);
         telemetry.addData("rotate", rotate);
         telemetry.addData("motor one", motorOnePower);
         telemetry.addData("motor two", motorTwoPower);

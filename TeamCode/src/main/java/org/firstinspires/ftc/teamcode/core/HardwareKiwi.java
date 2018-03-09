@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.core;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -14,16 +15,21 @@ public class HardwareKiwi {
     public DcMotor motorTwo = null;
     public DcMotor motorThree = null;
 
+    public ColorSensor colorSensor = null;
+
     HardwareMap hwMap = null;
 
     public void init(HardwareMap ahwMap) {
 
         hwMap = ahwMap;
 
+        // Get all devices
         motorOne    = hwMap.dcMotor.get("motor_one");
         motorTwo    = hwMap.dcMotor.get("motor_two");
         motorThree  = hwMap.dcMotor.get("motor_three");
+        colorSensor = hwMap.colorSensor.get("color_sensor");
 
+        // Motor configurations
         motorOne.setDirection(DcMotor.Direction.FORWARD);
         motorTwo.setDirection(DcMotor.Direction.FORWARD);
         motorThree.setDirection(DcMotor.Direction.FORWARD);
