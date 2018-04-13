@@ -28,9 +28,11 @@ public class KiwiArcade extends OpMode {
         double motorOnePower;
         double motorTwoPower;
         double motorThreePower;
+        double kickerPower;
 
         double maxPower;
-        double drift;
+
+        // Driving
 
         speed = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
         moveX = gamepad1.left_stick_x;
@@ -58,9 +60,17 @@ public class KiwiArcade extends OpMode {
         telemetry.addData("moveX", moveX);
         telemetry.addData("moveY", moveY);
         telemetry.addData("rotate", rotate);
-        telemetry.addData("motor one", motorOnePower);
-        telemetry.addData("motor two", motorTwoPower);
-        telemetry.addData("motor three", motorThreePower);
+
+        // Kicker
+
+        kickerPower = gamepad1.right_trigger - gamepad1.left_trigger;
+
+        robot.kicker.setPower(kickerPower);
+
+        telemetry.addData("kicker", kickerPower);
+
+        // Update telemetry
+
         telemetry.update();
 
     }
