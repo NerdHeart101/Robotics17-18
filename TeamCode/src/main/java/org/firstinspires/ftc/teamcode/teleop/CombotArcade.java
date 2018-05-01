@@ -15,12 +15,16 @@ public class CombotArcade extends OpMode{
     int bottomClaw = 0;
     int topClaw = 0;
 
-    double[] bottomPositions = {0.0,0.5,0.6};
-    double[] topPositions = {0.0,0.4,0.55};
+    final double[] bottomPositions = {0.0,0.5,0.75};
+    final double[] topPositions = {0.0,0.4,0.7};
 
-    // Values to only let claws move once per press
+    // Variables for toggles
     boolean bottomPress = false;
-    boolean topPress = true;
+    boolean topPress = false;
+    boolean modePress = false;
+
+    // Toggle for operator control modes
+    boolean glyphMode = true;
 
     // Arm positions
     final double UP = 1.0;
@@ -28,6 +32,8 @@ public class CombotArcade extends OpMode{
 
     // Speeds
     final double GLYPH_SPEED = 1.0;
+    final double RELIC_SPEED = 0.1;
+    final double RELIC_SERVO_SPEED = 0.01;
 
     @Override
     public void init() {
@@ -50,6 +56,8 @@ public class CombotArcade extends OpMode{
         double glyph;
         double bottomPosition;
         double topPosition;
+
+        String modeTelemetry = "";
 
         // DRIVER CONTROLS
 
@@ -76,58 +84,111 @@ public class CombotArcade extends OpMode{
 
         // OPERATOR CONTROLS
 
-        // Glyph lift: D-Pad up and down
-        glyph = gamepad2.dpad_up ? GLYPH_SPEED : gamepad2.dpad_down ? -GLYPH_SPEED : 0;
-        robot.glyphLift.setPower(glyph);
+        // GLYPH MODE
 
-        // Glyph claws: right to close farther, left to close farther
-        if(gamepad2.right_trigger > 0.1 && !bottomPress) {
-            bottomClaw++;
-            bottomPress = true;
-        } else if (gamepad2.left_trigger > 0.1 && !bottomPress) {
-            bottomClaw--;
-            bottomPress = true;
-        } else if (gamepad2.right_trigger < 0.1 && gamepad2.left_trigger < 0.1) {
-            bottomPress = false;
+        if(glyphMode) {
+
+            modeTelemetry = "GLYPH MODE";
+
+            // Glyph lift: D-Pad up and down
+            glyph = gamepad2.dpad_up ? GLYPH_SPEED : gamepad2.dpad_down ? -GLYPH_SPEED : 0;
+            robot.glyphLift.setPower(glyph);
+
+            // Glyph claws: right to close farther, left to close farther
+            if (gamepad2.right_trigger > 0.1 && !bottomPress) {
+                bottomClaw++;
+                bottomPress = true;
+            } else if (gamepad2.left_trigger > 0.1 && !bottomPress) {
+                bottomClaw--;
+                bottomPress = true;
+            } else if (gamepad2.right_trigger < 0.1 && gamepad2.left_trigger < 0.1) {
+                bottomPress = false;
+            }
+
+            if (gamepad2.right_bumper && !topPress) {
+                topClaw++;
+                topPress = true;
+            } else if (gamepad2.left_bumper && !topPress) {
+                topClaw--;
+                topPress = true;
+            } else if (!gamepad2.right_bumper && !gamepad2.left_bumper) {
+                topPress = false;
+            }
+
+            // Keep claw values between useful values
+            if (bottomClaw > 2) {
+                bottomClaw = 2;
+            } else if (bottomClaw < 0) {
+                bottomClaw = 0;
+            }
+            if (topClaw > 2) {
+                topClaw = 2;
+            } else if (topClaw < 0) {
+                topClaw = 0;
+            }
+
+            // Set servo positions
+
+            bottomPosition = bottomPositions[bottomClaw];
+            topPosition = topPositions[topClaw];
+
+            robot.bottomLeftClaw.setPosition(bottomPosition);
+            robot.bottomRightClaw.setPosition(1 - bottomPosition);
+            robot.topLeftClaw.setPosition(topPosition);
+            robot.topRightClaw.setPosition(1 - topPosition);
+
         }
 
-        if(gamepad2.right_bumper && !topPress) {
-            topClaw++;
-            topPress = true;
-        } else if (gamepad2.left_bumper && !topPress) {
-            topClaw--;
-            topPress = true;
-        } else if (!gamepad2.right_bumper && !gamepad2.left_bumper) {
-            topPress = false;
+        // RELIC MODE
+
+        else {
+
+            modeTelemetry = "RELIC MODE";
+
+            // Triggers for shoulder, buttons for elbow
+            // right for out, left for in
+
+            robot.relicShoulder.setPower((gamepad2.right_trigger - gamepad2.left_trigger) * GLYPH_SPEED);
+            robot.relicElbow.setPower(gamepad2.right_bumper ? GLYPH_SPEED : gamepad2.left_bumper ? -GLYPH_SPEED : 0);
+
+            // Use D-pad to move relic wrist
+            double wristPosition = robot.relicWrist.getPosition() + (gamepad2.dpad_up ? RELIC_SERVO_SPEED : gamepad2.dpad_down ? -RELIC_SERVO_SPEED : 0);
+            if (wristPosition < 0 || wristPosition > 1) {
+                if (wristPosition > 1) {
+                    wristPosition = 1;
+                } else {
+                    wristPosition = 0;
+                }
+            }
+            robot.relicWrist.setPosition(wristPosition);
+
+            // Use A and B to open and close relic hand, respectively
+
+            if(gamepad2.a || gamepad2.b) {
+                if(gamepad2.a) {
+                    robot.relicHand.setPosition(0.0);
+                } else if (gamepad2.b) {
+                    robot.relicHand.setPosition(1.0);
+                }
+            }
         }
 
-        // Keep claw values between useful values
-        if(bottomClaw > 2) {
-            bottomClaw = 2;
-        } else if (bottomClaw < 0) {
-            bottomClaw = 0;
-        }
-        if(topClaw > 2) {
-            topClaw = 0;
-        } else if (topClaw < 0) {
-            topClaw = 0;
-        }
+        // MODE SWITCH
 
-        // Use appropriate positions
-        bottomPosition = bottomPositions[bottomClaw];
-        topPosition = topPositions[topClaw];
-
-        robot.bottomLeftClaw.setPosition(bottomPosition);
-        robot.bottomRightClaw.setPosition(1 - bottomPosition);
-        robot.topLeftClaw.setPosition(topPosition);
-        robot.topRightClaw.setPosition(1 - topPosition);
+        if(gamepad2.back) {
+            if(!modePress) {
+                modePress = !modePress;
+            }
+        } else {
+            modePress = false;
+        }
 
         // TELEMETRY
 
         telemetry.addData("speed",  "%.2f", speed);
         telemetry.addData("angle", "%.2f", angle);
         telemetry.addData("rotation", "%.2f", rotate);
-        telemetry.addData("glyph lift", "%.2f", glyph);
         telemetry.addData("fine control", fine);
+        telemetry.addData("operator mode", modeTelemetry);
     }
 }

@@ -32,6 +32,7 @@
         import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
         import com.qualcomm.robotcore.eventloop.opmode.Disabled;
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
         import org.firstinspires.ftc.robotcore.external.ClassFactory;
         import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -66,7 +67,7 @@
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="Concept: VuMark Id", group ="Concept")
+@TeleOp(name="Concept: VuMark Id", group ="Concept")
 
 public class ConceptVuMarkIdentification extends LinearOpMode {
 
