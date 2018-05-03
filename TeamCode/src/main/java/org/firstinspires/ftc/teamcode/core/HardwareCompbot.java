@@ -94,7 +94,7 @@ public class HardwareCompbot {
         topRightClaw.setPosition(1);
 
         // Find and configure SENSORS
-        colorSensor = hwMap.get(ColorSensor.class, "sensor_color");
+        colorSensor = hwMap.get(ColorSensor.class, "color_sensor");
         gyroSensor = hwMap.get(ModernRoboticsI2cGyro.class, "gyro_sensor");
 
     }

@@ -132,8 +132,8 @@ public class CombotArcade extends OpMode{
             bottomPosition = bottomPositions[bottomClaw];
             topPosition = topPositions[topClaw];
 
-            robot.bottomLeftClaw.setPosition(bottomPosition);
-            robot.bottomRightClaw.setPosition(1 - bottomPosition);
+            robot.bottomLeftClaw.setPosition(1 - bottomPosition);
+            robot.bottomRightClaw.setPosition(bottomPosition);
             robot.topLeftClaw.setPosition(topPosition);
             robot.topRightClaw.setPosition(1 - topPosition);
 
@@ -175,9 +175,10 @@ public class CombotArcade extends OpMode{
 
         // MODE SWITCH
 
-        if(gamepad2.back) {
+        if(gamepad2.x) {
             if(!modePress) {
-                modePress = !modePress;
+                glyphMode = !glyphMode;
+                modePress = true;
             }
         } else {
             modePress = false;
