@@ -38,7 +38,7 @@ public class AutoAll extends LinearOpMode {
     // autoPrefs is a placeholder for a GUI to select each variable
     // color: true means red, false means blue
     // position: true means front, false means back
-    private boolean[] autoPrefs = {true,true};
+    private boolean[] autoPrefs = {true,false};
 
     private boolean color = autoPrefs[0];
     private boolean position = autoPrefs[1];
@@ -47,16 +47,16 @@ public class AutoAll extends LinearOpMode {
     public void runOpMode() {
 
         // Arm positions
-        final double up = 1.0;
-        final double down = 0.3;
+        final double up = 0.0;
+        final double down = 0.7;
 
         // Initialization procedures
         robot.init(hardwareMap);
 
         robot.colorSensor.enableLed(true);
 
-        robot.bottomLeftClaw.setPosition(0);
-        robot.bottomRightClaw.setPosition(1);
+        robot.bottomLeftClaw.setPosition(1);
+        robot.bottomRightClaw.setPosition(0);
 
         robot.jewelArm.setPosition(up);
         robot.jewelShoulder.setPosition(0.5);
@@ -68,7 +68,8 @@ public class AutoAll extends LinearOpMode {
         // BEGIN AUTONOMOUS
 
         // Grab glyph, get arm in sensing position
-
+        robot.topLeftClaw.setPosition(1);
+        robot.topRightClaw.setPosition(0);
         glyphGrab(true);
         glyph(0.5,1);
 
@@ -102,21 +103,21 @@ public class AutoAll extends LinearOpMode {
         robot.jewelArm.setPosition(up);
         robot.jewelShoulder.setPosition(0.5);
 
-        // Drive to safe zone
+        // Drive to safe zone an score glyph
 
         if (position) {
             // Red
             if(color) {
-                encoderDrive(26.0, 180);
-                gyroRotate(-225, TURN_SPEED);
+                encoderDrive(28.0, 0);
+                gyroRotate(-45, TURN_SPEED);
                 encoderDrive(10,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
             }
             // Blue
             else {
-                encoderDrive(28.0, 0);
-                gyroRotate(45, TURN_SPEED);
+                encoderDrive(26.0, 180);
+                gyroRotate(135, TURN_SPEED);
                 encoderDrive(10,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
@@ -126,21 +127,21 @@ public class AutoAll extends LinearOpMode {
         else {
             // Red
             if(color) {
-                encoderDrive(26.0,180);
-                gyroRotate(-135,TURN_SPEED);
+                encoderDrive(28.0,0);
+                gyroRotate(45,TURN_SPEED);
                 encoderDrive(4,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
-                encoderDrive(2,0);
+                //encoderDrive(2,0);
             }
             // Blue
             else {
-                encoderDrive(28.0,0);
-                gyroRotate(-45,TURN_SPEED);
+                encoderDrive(26.0,180);
+                gyroRotate(225,TURN_SPEED);
                 encoderDrive(4,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
-                encoderDrive(2,0);
+                //encoderDrive(2,0);
             }
         }
 
@@ -276,8 +277,8 @@ public class AutoAll extends LinearOpMode {
 
     public void glyphGrab(boolean grabbing) {
         if(grabbing) {
-            robot.bottomLeftClaw.setPosition(1);
-            robot.bottomRightClaw.setPosition(0);
+            robot.bottomLeftClaw.setPosition(0);
+            robot.bottomRightClaw.setPosition(1);
         } else {
             robot.bottomLeftClaw.setPosition(0.5);
             robot.bottomRightClaw.setPosition(0.5);
