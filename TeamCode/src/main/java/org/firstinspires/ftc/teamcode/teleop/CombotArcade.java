@@ -32,7 +32,7 @@ public class CombotArcade extends OpMode{
 
     // Speeds
     final double GLYPH_SPEED = 1.0;
-    final double RELIC_SPEED = 0.1;
+    final double RELIC_SPEED = .4;
     final double RELIC_SERVO_SPEED = 0.01;
 
     @Override
@@ -148,8 +148,8 @@ public class CombotArcade extends OpMode{
             // Triggers for shoulder, buttons for elbow
             // right for out, left for in
 
-            robot.relicShoulder.setPower((gamepad2.right_trigger - gamepad2.left_trigger) * GLYPH_SPEED);
-            robot.relicElbow.setPower(gamepad2.right_bumper ? GLYPH_SPEED : gamepad2.left_bumper ? -GLYPH_SPEED : 0);
+            robot.relicShoulder.setPower((gamepad2.right_trigger - gamepad2.left_trigger) * RELIC_SPEED);
+            robot.relicElbow.setPower(gamepad2.right_bumper ? RELIC_SPEED : gamepad2.left_bumper ? -RELIC_SPEED : 0);
 
             // Use D-pad to move relic wrist
             double wristPosition = robot.relicWrist.getPosition() + (gamepad2.dpad_up ? RELIC_SERVO_SPEED : gamepad2.dpad_down ? -RELIC_SERVO_SPEED : 0);
@@ -164,12 +164,15 @@ public class CombotArcade extends OpMode{
 
             // Use A and B to open and close relic hand, respectively
 
-            if(gamepad2.a || gamepad2.b) {
+            if(gamepad2.a || gamepad2.b || gamepad2.y) {
                 if(gamepad2.a) {
                     robot.relicHand.setPosition(0.0);
                 } else if (gamepad2.b) {
                     robot.relicHand.setPosition(1.0);
+                } else if (gamepad2.y){
+                    robot.relicHand.setPosition(0.7);
                 }
+
             }
         }
 
