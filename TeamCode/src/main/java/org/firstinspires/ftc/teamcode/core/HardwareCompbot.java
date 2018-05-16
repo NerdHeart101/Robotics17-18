@@ -84,9 +84,9 @@ public class HardwareCompbot {
         topLeftClaw = hwMap.get(Servo.class, "top_left_glyph");
         topRightClaw = hwMap.get(Servo.class, "top_right_glyph");
 
-        jewelArm.setPosition(0.5);
+        jewelArm.setPosition(0.0);
         jewelShoulder.setPosition(0.5);
-        relicWrist.setPosition(0);
+        relicWrist.setPosition(0.5);
         relicHand.setPosition(0);
         bottomLeftClaw.setPosition(0);
         bottomRightClaw.setPosition(1);

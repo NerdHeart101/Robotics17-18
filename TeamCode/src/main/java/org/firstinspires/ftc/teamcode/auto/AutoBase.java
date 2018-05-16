@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -14,8 +15,9 @@ import org.firstinspires.ftc.teamcode.core.HardwareCompbot;
  * Created by HSstudent on 12/5/2017.
  */
 
-@Autonomous(name="Auto: ALL", group="auto")
-public class AutoAll extends LinearOpMode {
+@Disabled
+@Autonomous(name="Auto: BASE", group="auto")
+public class AutoBase extends LinearOpMode {
 
     HardwareCompbot robot = new HardwareCompbot();
     private ElapsedTime runtime = new ElapsedTime();
@@ -38,19 +40,10 @@ public class AutoAll extends LinearOpMode {
     // autoPrefs is a placeholder for a GUI to select each variable
     // color: true means red, false means blue
     // position: true means front, false means back
-    private boolean[] autoPrefs = {true,false};
 
-    private boolean color = autoPrefs[0];
-    private boolean position = autoPrefs[1];
+    // Initialization procedures
+    public void initAuto() {
 
-    @Override
-    public void runOpMode() {
-
-        // Arm positions
-        final double up = 0.0;
-        final double down = 0.7;
-
-        // Initialization procedures
         robot.init(hardwareMap);
 
         robot.colorSensor.enableLed(true);
@@ -58,22 +51,20 @@ public class AutoAll extends LinearOpMode {
         robot.bottomLeftClaw.setPosition(1);
         robot.bottomRightClaw.setPosition(0);
 
-        robot.jewelArm.setPosition(up);
+        robot.jewelArm.setPosition(0.0);
         robot.jewelShoulder.setPosition(0.5);
 
         robot.gyroSensor.calibrate();
+    }
 
-        waitForStart();
-
-        // BEGIN AUTONOMOUS
-
+    public void runAuto(boolean red, boolean front) {
         // Grab glyph, get arm in sensing position
         robot.topLeftClaw.setPosition(1);
         robot.topRightClaw.setPosition(0);
         glyphGrab(true);
         glyph(0.5,1);
 
-        robot.jewelArm.setPosition(down);
+        robot.jewelArm.setPosition(0.725);
 
         sleep(2000);
 
@@ -83,7 +74,7 @@ public class AutoAll extends LinearOpMode {
             telemetry.addData("Status", "Sensing");
             telemetry.update();
             if (robot.colorSensor.red() != robot.colorSensor.blue()) {
-                if ((robot.colorSensor.blue() > robot.colorSensor.red()) == color) {
+                if ((robot.colorSensor.blue() > robot.colorSensor.red()) == red) {
                     robot.jewelShoulder.setPosition(0.7);
                 } else {
                     robot.jewelShoulder.setPosition(0.3);
@@ -100,48 +91,50 @@ public class AutoAll extends LinearOpMode {
         }
 
         // Reset arm
-        robot.jewelArm.setPosition(up);
+        robot.jewelArm.setPosition(0.0);
         robot.jewelShoulder.setPosition(0.5);
 
         // Drive to safe zone an score glyph
-
-        if (position) {
+        // Front stones
+        if (front) {
             // Red
-            if(color) {
-                encoderDrive(28.0, 0);
+            if(red) {
+                encoderDrive(24.0, 0);
                 gyroRotate(-45, TURN_SPEED);
-                encoderDrive(10,0);
+                encoderDrive(14,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
+                encoderDrive(1,180);
             }
             // Blue
             else {
                 encoderDrive(26.0, 180);
-                gyroRotate(135, TURN_SPEED);
-                encoderDrive(10,0);
+                gyroRotate(230, TURN_SPEED);
+                encoderDrive(17,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
+                encoderDrive(1,180);
             }
         }
         // Back stones
         else {
             // Red
-            if(color) {
-                encoderDrive(28.0,0);
+            if(red) {
+                encoderDrive(29.0,0);
                 gyroRotate(45,TURN_SPEED);
-                encoderDrive(4,0);
+                encoderDrive(5,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
-                //encoderDrive(2,0);
+                encoderDrive(1,180);
             }
             // Blue
             else {
-                encoderDrive(26.0,180);
-                gyroRotate(225,TURN_SPEED);
-                encoderDrive(4,0);
+                encoderDrive(28.0,180);
+                gyroRotate(135,TURN_SPEED);
+                encoderDrive(8,0);
                 glyph(-0.5,1);
                 glyphGrab(false);
-                //encoderDrive(2,0);
+                encoderDrive(1,180);
             }
         }
 
@@ -323,5 +316,13 @@ public class AutoAll extends LinearOpMode {
 
         //while(vuMark);
         return 0;
+    }
+
+    @Override
+    public void runOpMode() {
+
+        telemetry.addData("ERROR","what did you do this should be disabled");
+        telemetry.update();
+        while(opModeIsActive()) {}
     }
 }

@@ -32,7 +32,7 @@ public class CombotArcade extends OpMode{
 
     // Speeds
     final double GLYPH_SPEED = 1.0;
-    final double RELIC_SPEED = .4;
+    final double RELIC_SPEED = 0.45;
     final double RELIC_SERVO_SPEED = 0.01;
 
     @Override
@@ -170,7 +170,7 @@ public class CombotArcade extends OpMode{
                 } else if (gamepad2.b) {
                     robot.relicHand.setPosition(1.0);
                 } else if (gamepad2.y){
-                    robot.relicHand.setPosition(0.7);
+                    robot.relicHand.setPosition(0.4);
                 }
 
             }
